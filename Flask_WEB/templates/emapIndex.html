@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>RTU-eMap</title>
+		<marquee style="position:absolute;z-index:1; background=“red">RTU-Emap-Test 仅供参考 MadeBy： Geeks Date: 2019/05/30</marquee>
+        <style type="text/css"></style>
+        <link rel="stylesheet" type="text/css" href="/static/css/table.css">
+        <!--引入百度地图API接口以及创建应用的AK-->
+        <script src="http://api.map.baidu.com/api?v=2.0&ak=VU8AvenH7fZ4lf00DATgVDFf5GF5ZAwc"></script>
+		<!--引入jquery网络通信API接口以及创建应用的AK-->
+		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
+    </head>
+    <body>
+        <!--地图存放位置-->
+        <div id="map" > Baidu MAP </div>
+		<!--控制面板界面表格布局-->
+		<table id="table" border="1" width="100%" height="20px" cellspacing="0" cellpadding="4" bgcolor="#EEEEEE" class="tabtop13" align="center">
+			<tr height="1px">
+				<th width="20%" rowspan="2" class="btbg font-center titfont">RTU运动状态信息:</th>
+				<th>Realtime</th>
+				<th>Name</th>
+				<th>Longitude</th>
+				<th>Latitude</th>
+				<th>Height</th>
+				<th>Speed</th>
+				<th>direction</th>
+
+			</tr>
+			<tr>
+				<td><div id="realtime">XXXX</div></td>
+				<td><div id="name">XXXX</div></td>
+				<td><div id="longitude">XXXX</div></td>
+				<td><div id="latitude">XXXX</div></td>
+				<td><div id="height">XXXX</div></td>
+				<td><div id="speed">XXXX</div></td>
+				<td><div id="direction">XXXX</div></td>
+			</tr>
+			<tr height="1px">
+				<th class="btbg font-center titfont">定位跟踪方式</th>
+				<td width="50%" colspan="3">
+					<button type="button" onclick="Autofollow()" value="Autofollow">自动跟踪</button>
+					<button type="button" onclick="AutoLocation()" value="AutoLocation">自动定位</button>
+					<button type="button" onclick="ManuelLocation()" value="ManuelLocation">手动定位</button>
+					<button type="button" onclick="StopTimer()" value="Stop">停止定位</button>
+					<button type="button" onclick="myDistanceTool.open();" value="Stop">测距开启</button>
+					<input type="button" value="关闭测距" onclick="myDistanceTool.close()">
+					<br>>>终端选择：<input value="RTU1" id="RTUname" type="select"><button onclick="RTUShift()" value="Stop">切换</button>
+				</td>
+				<td colspan="2">RTU设备信息：<div id="RTUinfo" style="color:blue"> RTU-Infofation </div></td>
+
+				<td colspan="2">定位模式：<div id="LocationMode" style="color:red"> LocationMode </div></td>
+			</tr>
+			<tr height="1px">
+				<th width="20%" rowspan="2" class="btbg font-center titfont">RTU数据采集:</th>
+				<th>Temprature</th>
+				<th>Light</th>
+				<th>Data1</th>
+				<th>Data2</th>
+				<th>Data3</th>
+				<th>Data4</th>
+				<th>Data5</th>
+				
+			</tr>
+			<tr>
+				<td><div id="temp">XXXX</div></td>
+				<td><div id="light">XXXX</div></td>
+				<td><div id="data1">XXXX</div></td>
+				<td><div id="data2">XXXX</div></td>
+				<td><div id="data3">XXXX</div></td>
+				<td><div id="data4">XXXX</div></td>
+				<td><div id="data5">XXXX</div></td>
+			</tr>
+		</table>
+		
+    </body>
+    <script src="/static/js/UMap.js"></script>
+    <script src="/static/js/baidu.js"></script>
+	<script src="/static/js/GetData.js"></script>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html style="height: 80%">
+   <head>
+		<title> Data Source From CSUST-Auto1601 </title>
+		<meta charset="utf-8">
+		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+		<script>
+			function control(opr){
+				var url = "http://120.79.219.49/postdata/"+"RTU1"+"&"+ opr +"&"+ "10";
+				$.post(url,{"A":"200"},
+				function(data,status){alert("数据: " + data + "\n状态: " + status)})
+			}
+		</script>
+	</head>
+	<body style="height: 100%; margin: 0">
+       <script type="text/javascript" src="https://echarts.apache.org/examples/vendors/echarts/echarts.min.js"></script>
+       <script type="text/javascript" src="https://echarts.apache.org/examples/vendors/echarts-gl/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="https://echarts.apache.org/examples/vendors/echarts-stat/ecStat.min.js"></script>
+       <script type="text/javascript" src="https://echarts.apache.org/examples/vendors/echarts/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="https://echarts.apache.org/examples/vendors/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="https://echarts.apache.org/examples/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=OdD1GyXdnLrBiwGZquniGZHoOCUqat0G&__ec_v__=20190126"></script>
+       <script type="text/javascript" src="https://echarts.apache.org/examples/vendors/echarts/extension/bmap.min.js"></script>
+       <script type="text/javascript" src="https://echarts.apache.org/examples/vendors/simplex.js"></script>
+	   <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+	<marquee>CSUST-Auto1601 自动化控制面板实验版 仅供参考 MadeBy： Geeks Date: 2019/04/07</marquee>
+	<h1 id="Title" align="center" ><font color="blue"> 数据可视化集中监控系统 </font> </h1>
+	<center><p id="note"> NOTE INFO </p></center>
+	<p id="demo">Data To Show</p>
+	<div id="chart1" style="height:80%;float:left;width:48%;border:1px solid #000"></div>
+	<div id="chart2" style="height:80%;float:right;width:48%;border:1px solid #000"></div>
+	<div color="red" align="right" style="width:85%">
+		<button name="down" color="Green" onclick="control(0)">开度调小</button>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		<button name="up" color="red" onclick="control(1)">开度调大</button>
+	</div>
+<script type="text/javascript">
+// Echart初始化：
+var dom1 = document.getElementById("chart1");
+var dom2 = document.getElementById("chart2");
+var myChart1 = echarts.init(dom1);
+var myChart2 = echarts.init(dom2);
+option1 = null;
+option2 = null;
+
+function randomData() {
+    var now = new Date();
+    valuef = 30 + Math.random()*10 - 5;
+    return {
+        value: [
+            [now.getHours(), now.getMinutes(), now.getSeconds()].join(':'),
+            Math.round(valuef)
+        ]
+    }
+}
+
+function GetData() {
+	var now = new Date();
+	var Time = "Null";
+
+	$.get("http://120.79.219.49/getdata/RTU1",function(data,status){
+		jsonObj = JSON.parse(data);
+		valuef1 = parseFloat(jsonObj.temp);
+		valuef2 = parseFloat(jsonObj.light);
+		valuef3 = parseFloat(jsonObj.data1);
+		ST = status + " Site: " + jsonObj.name; });
+
+	Time = [now.getHours(), now.getMinutes(), now.getSeconds()].join(':');
+	Series_Obj = { value1: [ Time, Math.round(valuef1)], value2: [ Time, Math.round(valuef2)],value3: [valuef3, '角度']};
+    return Series_Obj;
+}
+
+var data1 = [];
+var data2 = [];
+var data3 = [];
+var date = [];
+var ST = "waitConnect...";
+var valuef1 = 25;
+var valuef2 = 0;
+var valuef3 = 0;
+for (var i = 0; i < 100; i++) {
+	_data = { value: [ 'Loading' + i.toString(),25]};
+    data1.push(_data);
+
+	_data = { value: [ 'Loading' + i.toString(),0]};
+	data2.push(_data);
+
+    date.push('Loading'+ i.toString());
+}
+
+option1 = {
+    title: {
+        text: '动态模拟数据'
+    },
+	toolbox: {
+        feature: {
+            dataZoom: {
+                yAxisIndex: 'none'
+            },
+            dataView: {readOnly: false},
+            magicType: {type: ['line', 'bar']},
+            restore: {},
+            saveAsImage: {}
+        }
+    },
+    tooltip: {
+        trigger: 'axis',
+        formatter: function (params) {
+            params = params[0];
+            return params.value[0] + ' / ' + params.value[1];
+        },
+        axisPointer: {
+            animation: true
+        }
+    },
+	legend: {
+        data:['模拟数据Temp','模拟数据Light']
+    },
+    xAxis: {
+        type: 'category',
+        splitLine: {
+            show: false
+        },
+        data: date
+    },
+    yAxis: {
+        type: 'value',
+		axisLabel: {
+            formatter: '{value} °C'
+        },
+        boundaryGap: [0.2, 0.5],
+        splitLine: {
+            show: true
+        }
+    },
+    series: [{
+        name: '模拟数据Temp',
+        type: 'line',
+        showSymbol: true,
+        hoverAnimation: true,
+        data: data1
+    },
+	{
+		name:'模拟数据Light',
+		type:'line',
+		stack: '总量',
+		data: data2
+    }]
+};
+
+option2 = {
+	title: {
+        text: '舵机控制阀门开度'
+    },
+    tooltip : {
+        formatter: "{a} <br/>{b} : {c}%"
+    },
+    toolbox: {
+        feature: {
+            dataZoom: {
+                yAxisIndex: 'none'
+            },
+            dataView: {readOnly: false},
+            magicType: {type: ['line', 'bar']},
+            restore: {},
+            saveAsImage: {}
+        }
+    },
+    series: [
+        {
+            name: '舵机开度',
+            type: 'gauge',
+            detail: {formatter:'{value}%'},
+            data: [{value: 50, name: '开度'}]
+        }
+    ]
+};
+
+setInterval(function () {
+
+    var _data = GetData();
+    data1.shift();
+	data2.shift();
+    date.shift();
+    data1.push(_data.value1);
+	data2.push(_data.value2);
+    date.push(_data.value1[0]);
+	document.getElementById("note").innerHTML ="State: " + ST;
+	document.getElementById("demo").innerHTML ="<center> Data1: " + _data.value1[1] + "&#8451 &nbsp Data2: " + _data.value2[1] +"&#8451 </center>";
+    myChart1.setOption({
+        xAxis: {
+          data: date
+        },
+        series: [{
+			name: '模拟数据Temp',
+            data: data1
+        },
+		{
+			name: '模拟数据Light',
+            data: data2
+        }]
+    });
+	myChart2.setOption({
+        series: [{
+            data: _data.value3
+        }]
+    });
+}, 1000);
+
+//Start Echart1：
+if (option1 && typeof option1 === "object") {
+    myChart1.setOption(option1, true);
+}
+//Start Echart2：
+if (option2 && typeof option2 === "object") {
+	myChart2.setOption(option2, true);
+}
+       </script>
+   </body>
+</html>

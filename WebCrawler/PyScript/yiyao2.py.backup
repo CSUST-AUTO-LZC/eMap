@@ -1,0 +1,43 @@
+import xlrd
+import openpyxl
+import urllib.request
+import urllib.error
+import urllib
+import re
+import random
+import time
+
+path1 = 'E:/A.xlsx'
+workbook = xlrd.open_workbook(path1)
+Data_sheet = workbook.sheets()[0]
+cols = Data_sheet.col_values(7)
+del cols[0]
+del cols[0]
+
+path2 = '1.xlsx'
+sheet_name = '1'
+workbook = openpyxl.Workbook()
+sheet = workbook.active
+sheet.title = sheet_name
+
+for i in range(0, 200):
+
+    keyword = urllib.parse.quote(cols[i])
+    url = 'http://www.molbase.cn/new/product/?keyword=' + str(keyword)
+    print(url)
+    cnt =  random.randint(0,10)
+    headers = ("User-Agent", "Mozilla/5.0 (Windows NT 6.1;) Gecko/20100101 Firefox/57.0")
+    opener = urllib.request.build_opener()
+    opener.addheaders = [headers]
+    data = opener.open(url).read()
+    data = str(data)
+
+    req = r'<a target="_blank" href="(.*?)" class="detial-btn cut-2">'
+    res = re.compile(req).findall(data)
+    surl = "http:" + res[0]
+
+    sheet.cell(row = i + 1, column= 1, value=str(cols[i]))
+    sheet.cell(row = i + 1, column= 2, value=str(surl))
+    print(str(cols[i]) , str(surl))
+    workbook.save(path2)
+    time.sleep(random.randint(15,30))

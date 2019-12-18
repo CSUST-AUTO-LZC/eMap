@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+          "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>MJPG-streamer</title>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <link rel="stylesheet" href="/static/css/mjpg/style.css" type="text/css" />
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.rotate.js"></script>
+    <!--[if IE 6]>
+    <link rel="stylesheet" href="/static/css/mjpg/fix.css" type="text/css" />
+    <![endif]-->
+    <script type="text/javascript">
+
+        var phi = 0, flipped = 0, mirrored = 0;
+
+        function setXformClass() {
+            $('.xform').each(function (idx, el) {
+                el.className = "xform x" + (flipped ? "-flipped" : "") + (mirrored ? "-mirrored" : "") + "-rotated-" + phi;
+            });
+        }
+        $(document).ready(function () {
+            // set rotation angle phi and toggle rotate class
+            $('#rotate').click(function () {
+                phi = (phi + 90) % 360;
+                setXformClass();
+                if (phi % 180) {
+                    $('.xform-p').addClass('rotated');
+                } else {
+                    $('.xform-p').removeClass('rotated');
+                }
+            });
+            // toggle mirror class component
+            $('#mirror').click(function () {
+                mirrored = !mirrored;
+                setXformClass();
+            });
+            // toggle flip class component
+            $('#flip').click(function () {
+                flipped = !flipped;
+                setXformClass();
+            });
+        });
+
+/**/</script>
+</head>
+
+<body>
+    <div id="sidebar">
+        <h1>家庭智能管理系统</h1>
+        <h2>您的贴心私人管家</h2>
+
+        <div id="menu">
+            <a href="/static/html/index.html">简介</a>
+            <a href="/static/html/static.html">功能</a>
+            <a class="active" href="/static/html/stream.html">监控</a>
+            <a href="/static/html/java.html">控制</a>
+            <a href="/static/html/javascript.html">Javascript</a>
+            <a href="/static/html/videolan.html">摄像头设置</a>
+            <a target="_blank" onClick="window.open(this.href, '_blank','width=400,height=400'); return false;" href="control.htm">Control</a>
+        </div>
+
+        <h3>本系统由以下人员制作</h3>
+        <p>123 123</p>
+    </div>
+
+    <div id="content">
+        <h1>监控</h1>
+        <h2>显示家中摄像头并进行设置</h2>
+
+
+        <h3>
+            <a href="/static/html/stream_simple.html">小窗口播放</a>
+        </h3>
+
+
+        <p>
+            调用函数
+         <pre>&lt;img src="http://192.168.43.207:8081/?action=stream" /&gt;</pre>
+        </p>
+
+        <p id="xform">
+            <button id="rotate">
+                <div class="btnface" title="旋转"></div>
+            </button>
+            <button id="mirror">
+                <div class="btnface" title="镜像"></div>
+            </button>
+            <button id="flip">
+                <div class="btnface" title="翻转"></div>
+            </button>
+        </p>
+        <p class="xform-p"></p>
+        <p id="streamwrap" class="xform-p">
+            <img id="streamimage" class="xform" src="http://192.168.43.207:8081/?action=stream" />
+        </p>
+
+        <p>
+            &copy;
+            <small>长沙理工大学</small>   点击
+            <a href="www.csust.edu.cn">长沙理工大学了解更多</a>
+        </p>
+    </div>
+</body>
+</html>
